@@ -12,20 +12,6 @@
         font-family: arial;
         color: #ffffff;
       }
-      #timer {
-        font-size: 50px;
-        font-weight: bold;
-        color: #cccccc;
-      }
-      button {
-        padding: 5px;
-        font-size: 30px;
-      }
-      p {
-        width: fit-content;
-        font-size: 25px;
-        font-weight: bold;
-      }
     </style>
   </head>
   <body>
@@ -39,6 +25,13 @@
       <p id="times"></p>
     </div>
     <script>
+      if (window.innerWidth < window.innerHeight) {
+        document.getElementsByTagName("style")[0].innerHTML +=
+          "#timer {font-size: 100px;font-weight: bold;color: #cccccc;}button {padding: 5px;font-size: 60px;}p {width: fit-content;font-size: 50px;font-weight: bold;}";
+      } else {
+        document.getElementsByTagName("style")[0].innerHTML +=
+          "#timer {font-size: 50px;font-weight: bold;color: #cccccc;}button {padding: 5px;font-size: 30px;}p {width: fit-content;font-size: 25px;font-weight: bold;}";
+      }
       let timerInterval;
       let milliseconds = 0;
       let seconds = 0;
