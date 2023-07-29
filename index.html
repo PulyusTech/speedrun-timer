@@ -87,7 +87,7 @@
         const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(
           seconds
         )}:${padZero(milliseconds)}`;
-        document.getElementById("timer").innerText = formattedTime;
+        timer.innerText = formattedTime;
       }
 
       function padZero(value) {
@@ -99,8 +99,8 @@
         .addEventListener("click", function () {
           if (!timerInterval) {
             timerInterval = setInterval(updateTimer, 10);
-            document.getElementById("timer").style.color = "#00ff00";
-            if (t.innerHTML == "") {
+            timer.style.color = "#00ff00";
+            if (timer.innerText == "00:00:00:00") {
               ogp = p.innerHTML;
               if (!params.get("p")) {
                 window.location.href = `${
@@ -119,7 +119,7 @@
       document.getElementById("stopBtn").addEventListener("click", function () {
         clearInterval(timerInterval);
         timerInterval = null;
-        document.getElementById("timer").style.color = "#4AC0FA";
+        timer.style.color = "#4AC0FA";
       });
 
       document
@@ -135,8 +135,8 @@
           seconds2 = 0;
           minutes2 = 0;
           hours2 = 0;
-          document.getElementById("timer").innerText = "00:00:00:00";
-          document.getElementById("timer").style.color = "#cccccc";
+          timer.innerText = "00:00:00:00";
+          timer.style.color = "#cccccc";
           p.innerHTML = ogp;
           t.innerHTML = "";
         });
