@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Speedrun Timer</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        background-color: #000000;
+        font-family: arial;
+        color: #ffffff;
+      }
+      #timer {
+        font-size: 50px;
+        font-weight: bold;
+        color: #cccccc;
+      }
+      button {
+        padding: 5px;
+        font-size: 30px;
+      }
+      p {
+        width: fit-content;
+        font-size: 25px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="timer">00:00:00:00</div>
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+    <button id="resetBtn">Reset</button>
+    <button onclick="nextgoal()">Next Goal</button>
+    <div style="display: flex">
+      <p id="goals" contenteditable="true">Type a new line for each goal...</p>
+      <p id="times"></p>
+    </div>
+    <script>
+      let timerInterval;
+      let milliseconds = 0;
+      let seconds = 0;
+      let minutes = 0;
+      let hours = 0;
+      let milliseconds2 = 0;
+      let seconds2 = 0;
+      let minutes2 = 0;
+      let hours2 = 0;
+      const p = document.getElementById("goals");
+      const t = document.getElementById("times");
+      const timer = document.getElementById("timer");
+      let ogp = "";
+      const params = new URL(document.location).searchParams;
+      if (params.get("p")) {
+        p.innerHTML = params.get("p");
+      }
+
+      function updateTimer() {
+        milliseconds++;
+        if (milliseconds === 100) {
+          milliseconds = 0;
+          seconds++;
+        }
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+        }
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+        milliseconds2++;
+        if (milliseconds2 === 100) {
+          milliseconds2 = 0;
+          seconds2++;
+        }
+        if (seconds2 === 60) {
+          seconds2 = 0;
+          minutes2++;
+        }
+        if (minutes2 === 60) {
+          minutes2 = 0;
+          hours2++;
+        }
+        const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(
+          seconds
+        )}:${padZero(milliseconds)}`;
+        document.getElementById("timer").innerText = formattedTime;
+      }
+
+      function padZero(value) {
+        return value.toString().padStart(2, "0");
+      }
+
+      document
+        .getElementById("startBtn")
+        .addEventListener("click", function () {
+          if (!timerInterval) {
+            timerInterval = setInterval(updateTimer, 10);
+            document.getElementById("timer").style.color = "#00ff00";
+            if (t.innerHTML == "") {
+              ogp = p.innerHTML;
+              if (!params.get("p")) {
+                window.location.href = `${
+                  window.location.href
+                }?p=${encodeURIComponent(ogp)}`;
+              } else {
+                p.innerHTML += "<div></div>";
+                p.innerHTML = p.innerHTML
+                  .replace(new RegExp("</div>", "g"), "")
+                  .replace(new RegExp("<div>", "g"), ": -<br>");
+              }
+            }
+          }
+        });
+
+      document.getElementById("stopBtn").addEventListener("click", function () {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        document.getElementById("timer").style.color = "#4AC0FA";
+      });
+
+      document
+        .getElementById("resetBtn")
+        .addEventListener("click", function () {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          milliseconds = 0;
+          seconds = 0;
+          minutes = 0;
+          hours = 0;
+          milliseconds2 = 0;
+          seconds2 = 0;
+          minutes2 = 0;
+          hours2 = 0;
+          document.getElementById("timer").innerText = "00:00:00:00";
+          document.getElementById("timer").style.color = "#cccccc";
+          p.innerHTML = ogp;
+          t.innerHTML = "";
+        });
+
+      function nextgoal() {
+        p.innerHTML = p.innerHTML.replace(": -<br>", ":<br>");
+        t.innerHTML += `&nbsp&nbsp&nbsp&nbsp&nbsp${padZero(hours2)}:${padZero(
+          minutes2
+        )}:${padZero(seconds2)}:${padZero(milliseconds2)}<br>`;
+        milliseconds2 = 0;
+        seconds2 = 0;
+        minutes2 = 0;
+        hours2 = 0;
+        if (!p.innerHTML.includes(": -<br>")) {
+          document.getElementById("stopBtn").click();
+        }
+      }
+    </script>
+  </body>
+</html>
